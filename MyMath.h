@@ -1,5 +1,6 @@
 #pragma once
 #include"Vector3.h"
+#include"Matrix4x4.h"
 
 
 class MyMath
@@ -20,9 +21,10 @@ class MyMath
 		static float Length(const Vector3& v);
 		//正規化
 		static Vector3 Normalize(const Vector3& v);
-
+		//
 		static void VectorScreenPrintf(int x, int y, const Vector3& vector,const char*label);
-
-
+		//座標変換
+		static Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
+		
 };
 

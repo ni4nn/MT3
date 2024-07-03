@@ -2,6 +2,8 @@
 #include<string>
 #include "Matrix4x4.h"
 #include "MatrixMath.h"
+#include"MyMath.h"
+#include"Vector3.h"
 
 const char kWindowTitle[] = "LC1A_16_スズキ_ミノリ_タイトル";
 
@@ -10,12 +12,12 @@ const char kWindowTitle[] = "LC1A_16_スズキ_ミノリ_タイトル";
 static const int kRowHeight = 20;
 static const int kColumnWidth = 60;
 
-void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix,const char* label) {
-	
-	Novice::ScreenPrintf(x, y, label); 
+void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label) {
+
+	Novice::ScreenPrintf(x, y, label);
 	for (int row = 0; row < 4; ++row) {
 		for (int column = 0; column < 4; ++column) {
-			Novice::ScreenPrintf(x + column * kColumnWidth, y + row * kRowHeight+kRowHeight, "%6.02f", matrix.m[row][column]);
+			Novice::ScreenPrintf(x + column * kColumnWidth, y + row * kRowHeight + kRowHeight, "%6.02f", matrix.m[row][column]);
 		}
 	}
 }
@@ -29,8 +31,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// キー入力結果を受け取る箱
 
-	char keys[256] = {0};
-	char preKeys[256] = {0};
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
 
 
 
@@ -58,6 +60,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Matrix4x4 transposeM2 = MatrixMath::Transpose(m2);
 	Matrix4x4 identity = MatrixMath::MakeIdentity4x4();
 
+	Vector3 translate{ 4.1f,2.6f,0.8f };
+	Vector3 scale{ 1.5f,5.2f,7.3f };
+	Matrix4x4 translateMatrix = MatrixMath::MakeTranslateMatrix(translate);
+	Matrix4x4 scaleMatrix = MatrixMath::MakeScaleMatrix(scale);
+	Vector3 point{ 2.3f,3.8f,1.4f };
+	Matrix4x4 transformMatrix = {
+		1.0f,2.0f,3.0f,4.0f,
+		3.0f,1.0f,1.0f,2.0f,
+		1.0f,4.0f,2.0f,3.0f,
+		2.0f,2.0f,1.0f,3.0f
+	};
+	Vector3 transformed = MyMath::Transform(point, transformMatrix);
+
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -72,18 +87,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		
-		MatrixScreenPrintf(0, 0, resultAdd, "Add");
+
+		/*MatrixScreenPrintf(0, 0, resultAdd, "Add");
 		MatrixScreenPrintf(0, kRowHeight * 5, resultSubtract, "Subtract");
 		MatrixScreenPrintf(0, kRowHeight * 5 * 2, resultMultiply, "Multiply");
 		MatrixScreenPrintf(0, kRowHeight * 5 * 3, inverseM1, "inverseM1");
 		MatrixScreenPrintf(0, kRowHeight * 5 * 4, inverseM2, "inverseM2");
 		MatrixScreenPrintf(kColumnWidth * 5, 0, transposeM1, "transposeM1");
 		MatrixScreenPrintf(kColumnWidth * 5,kRowHeight*5,transposeM2,"transposeM2");
-		MatrixScreenPrintf(kColumnWidth * 5, kRowHeight * 5 * 2, identity, "identity");
+		MatrixScreenPrintf(kColumnWidth * 5, kRowHeight * 5 * 2, identity, "identity");*/
 
-
-
+		MyMath::VectorScreenPrintf(0, 0, transformed, "transformed");
+		MatrixScreenPrintf(0, 15, translateMatrix, "translateMatrix");
+		MatrixScreenPrintf(0, 15 + kRowHeight * 5, scaleMatrix, "scaleMatrix");
 
 		///
 		/// ↑更新処理ここまで
