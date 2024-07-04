@@ -330,3 +330,34 @@ Matrix4x4 MatrixMath::Multiply(Matrix4x4& m1, Matrix4x4& m2) {
 
     return result;
 }
+
+Matrix4x4 MatrixMath::MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate)
+{
+    Matrix4x4 result;
+
+
+    Matrix4x4 rotateX = MatrixMath::MakeRotateXMatrix(rotate.x);
+    Matrix4x4 rotateY = MatrixMath::MakeRotateYMatrix(rotate.y);
+    Matrix4x4 rotateZ = MatrixMath::MakeRotateZMatrix(rotate.z);
+    Matrix4x4 rotateMatrix = MatrixMath::Multiply(rotateX, Multiply(rotateY, rotateZ));
+   
+
+    result.m[0][0] = scale.x * rotateMatrix.m[0][0];
+    result.m[0][1] = scale.x * rotateMatrix.m[0][1];
+    result.m[0][2] = scale.x * rotateMatrix.m[0][2];
+    result.m[0][3] = 0;
+    result.m[1][0] = scale.y * rotateMatrix.m[1][0];
+    result.m[1][1] = scale.y * rotateMatrix.m[1][1];
+    result.m[1][2] = scale.y * rotateMatrix.m[1][2];
+    result.m[1][3] = 0;
+    result.m[2][0] = scale.z * rotateMatrix.m[2][0];
+    result.m[2][1] = scale.z * rotateMatrix.m[2][1];
+    result.m[2][2] = scale.z * rotateMatrix.m[2][2];
+    result.m[2][3] = 0;
+    result.m[3][0] = translate.x;
+    result.m[3][1] = translate.y;
+    result.m[3][2] = translate.z;
+    result.m[3][3] = 1;
+
+    return result;
+}

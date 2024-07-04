@@ -36,49 +36,52 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 
-	Matrix4x4 m1 = {
-		3.2f,0.7f,9.6f,4.4f,
-		5.5f,1.3f,7.8f,2.1f,
-		6.9f,8.0f,2.6f,1.0f,
-		0.5f,7.2f,5.1f,3.3f
-	};
+	//Matrix4x4 m1 = {
+	//	3.2f,0.7f,9.6f,4.4f,
+	//	5.5f,1.3f,7.8f,2.1f,
+	//	6.9f,8.0f,2.6f,1.0f,
+	//	0.5f,7.2f,5.1f,3.3f
+	//};
 
-	Matrix4x4 m2 = {
-		4.1f,6.5f,3.3f,2.2f,
-		8.8f,0.6f,9.9f,7.7f,
-		1.1f,5.5f,6.6f,0.0f,
-		3.3f,9.9f,8.8f,2.2f
-	};
+	//Matrix4x4 m2 = {
+	//	4.1f,6.5f,3.3f,2.2f,
+	//	8.8f,0.6f,9.9f,7.7f,
+	//	1.1f,5.5f,6.6f,0.0f,
+	//	3.3f,9.9f,8.8f,2.2f
+	//};
 
 
-	Matrix4x4 resultAdd = MatrixMath::Add(m1, m2);
-	Matrix4x4 resultMultiply = MatrixMath::Multiply(m1, m2);
-	Matrix4x4 resultSubtract = MatrixMath::Subtract(m1, m2);
-	Matrix4x4 inverseM1 = MatrixMath::Inverse(m1);
-	Matrix4x4 inverseM2 = MatrixMath::Inverse(m2);
-	Matrix4x4 transposeM1 = MatrixMath::Transpose(m1);
-	Matrix4x4 transposeM2 = MatrixMath::Transpose(m2);
-	Matrix4x4 identity = MatrixMath::MakeIdentity4x4();
+	//Matrix4x4 resultAdd = MatrixMath::Add(m1, m2);
+	//Matrix4x4 resultMultiply = MatrixMath::Multiply(m1, m2);
+	//Matrix4x4 resultSubtract = MatrixMath::Subtract(m1, m2);
+	//Matrix4x4 inverseM1 = MatrixMath::Inverse(m1);
+	//Matrix4x4 inverseM2 = MatrixMath::Inverse(m2);
+	//Matrix4x4 transposeM1 = MatrixMath::Transpose(m1);
+	//Matrix4x4 transposeM2 = MatrixMath::Transpose(m2);
+	//Matrix4x4 identity = MatrixMath::MakeIdentity4x4();
 
-	Vector3 translate{ 4.1f,2.6f,0.8f };
-	Vector3 scale{ 1.5f,5.2f,7.3f };
-	Matrix4x4 translateMatrix = MatrixMath::MakeTranslateMatrix(translate);
-	Matrix4x4 scaleMatrix = MatrixMath::MakeScaleMatrix(scale);
-	Vector3 point{ 2.3f,3.8f,1.4f };
-	Matrix4x4 transformMatrix = {
-		1.0f,2.0f,3.0f,4.0f,
-		3.0f,1.0f,1.0f,2.0f,
-		1.0f,4.0f,2.0f,3.0f,
-		2.0f,2.0f,1.0f,3.0f
-	};
-	Vector3 transformed = MyMath::Transform(point, transformMatrix);
+	//Vector3 translate{ 4.1f,2.6f,0.8f };
+	//Vector3 scale{ 1.5f,5.2f,7.3f };
+	//Matrix4x4 translateMatrix = MatrixMath::MakeTranslateMatrix(translate);
+	//Matrix4x4 scaleMatrix = MatrixMath::MakeScaleMatrix(scale);
+	//Vector3 point{ 2.3f,3.8f,1.4f };
+	//Matrix4x4 transformMatrix = {
+	//	1.0f,2.0f,3.0f,4.0f,
+	//	3.0f,1.0f,1.0f,2.0f,
+	//	1.0f,4.0f,2.0f,3.0f,
+	//	2.0f,2.0f,1.0f,3.0f
+	//};
+	//Vector3 transformed = MyMath::Transform(point, transformMatrix);
+	//Vector3 rotate{ 0.4f,1.43f,-0.8f };
+	//Matrix4x4 rotateXMatrix = MatrixMath::MakeRotateXMatrix(rotate.x);
+	//Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateYMatrix(rotate.y);
+	//Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateZMatrix(rotate.z);
+	//Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply(rotateXMatrix, MatrixMath::Multiply(rotateYMatrix, rotateZMatrix));
+
+	Vector3 scale{ 1.2f,0.79f,-2.1f };
 	Vector3 rotate{ 0.4f,1.43f,-0.8f };
-	Matrix4x4 rotateXMatrix = MatrixMath::MakeRotateXMatrix(rotate.x);
-	Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateYMatrix(rotate.y);
-	Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateZMatrix(rotate.z);
-	Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply(rotateXMatrix, MatrixMath::Multiply(rotateYMatrix, rotateZMatrix));
-
-	
+	Vector3 translate{ 2.7f,-4.15f,1.57f };
+	Matrix4x4 worldMatrix = MatrixMath::MakeAffineMatrix(scale, rotate, translate);
 
 
 
@@ -111,12 +114,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		MatrixScreenPrintf(0, 15 + kRowHeight * 5, scaleMatrix, "scaleMatrix");*/
 
 
-		MatrixScreenPrintf(0, 0, rotateXMatrix, "rotateXMatrix");
+		/*MatrixScreenPrintf(0, 0, rotateXMatrix, "rotateXMatrix");
 		MatrixScreenPrintf(0, kRowHeight * 5, rotateYMatrix, "rotateYMatrix");
 		MatrixScreenPrintf(0, kRowHeight * 5 * 2, rotateZMatrix, "rotateZMatrix");
-		MatrixScreenPrintf(0, kRowHeight * 5 * 3, rotateXYZMatrix, "rotateXYZMatrix");
+		MatrixScreenPrintf(0, kRowHeight * 5 * 3, rotateXYZMatrix, "rotateXYZMatrix");*/
 
-
+		MatrixScreenPrintf(0, 0, worldMatrix, "worldMatrix");
 
 
 		///
