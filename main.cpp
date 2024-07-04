@@ -72,6 +72,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		2.0f,2.0f,1.0f,3.0f
 	};
 	Vector3 transformed = MyMath::Transform(point, transformMatrix);
+	Vector3 rotate{ 0.4f,1.43f,-0.8f };
+	Matrix4x4 rotateXMatrix = MatrixMath::MakeRotateXMatrix(rotate.x);
+	Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateYMatrix(rotate.y);
+	Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateZMatrix(rotate.z);
+	Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply(rotateXMatrix, MatrixMath::Multiply(rotateYMatrix, rotateZMatrix));
+
+	
+
+
 
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -97,9 +106,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		MatrixScreenPrintf(kColumnWidth * 5,kRowHeight*5,transposeM2,"transposeM2");
 		MatrixScreenPrintf(kColumnWidth * 5, kRowHeight * 5 * 2, identity, "identity");*/
 
-		MyMath::VectorScreenPrintf(0, 0, transformed, "transformed");
+	/*	MyMath::VectorScreenPrintf(0, 0, transformed, "transformed");
 		MatrixScreenPrintf(0, 15, translateMatrix, "translateMatrix");
-		MatrixScreenPrintf(0, 15 + kRowHeight * 5, scaleMatrix, "scaleMatrix");
+		MatrixScreenPrintf(0, 15 + kRowHeight * 5, scaleMatrix, "scaleMatrix");*/
+
+
+		MatrixScreenPrintf(0, 0, rotateXMatrix, "rotateXMatrix");
+		MatrixScreenPrintf(0, kRowHeight * 5, rotateYMatrix, "rotateYMatrix");
+		MatrixScreenPrintf(0, kRowHeight * 5 * 2, rotateZMatrix, "rotateZMatrix");
+		MatrixScreenPrintf(0, kRowHeight * 5 * 3, rotateXYZMatrix, "rotateXYZMatrix");
+
+
+
 
 		///
 		/// ↑更新処理ここまで

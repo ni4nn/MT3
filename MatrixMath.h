@@ -1,6 +1,7 @@
 #pragma once
 #include"Matrix4x4.h"
 #include"Vector3.h"
+#include<cmath>
 
 
 
@@ -19,8 +20,15 @@ public:
 	static Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
 	//拡縮行列
 	static Matrix4x4 MakeScaleMatrix(const Vector3& scale);
+	//X軸回転行列
+	static Matrix4x4 MakeRotateXMatrix(float radian);
 	//
-	static Matrix4x4 MatrixMultiply(Matrix4x4& m1, Matrix4x4& m2);
+	static Matrix4x4 MakeRotateYMatrix(float radian);
+	//
+	static Matrix4x4 MakeRotateZMatrix(float radian);
+	
+	//
+	static Matrix4x4 Multiply(Matrix4x4& m1, Matrix4x4& m2);
 
 };
 
