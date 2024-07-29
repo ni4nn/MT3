@@ -361,3 +361,5 @@ Matrix4x4 MatrixMath::MakeAffineMatrix(const Vector3& scale, const Vector3& rota
 
     return result;
 }
+
+
