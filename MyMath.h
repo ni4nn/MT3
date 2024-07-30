@@ -26,5 +26,9 @@ class MyMath
 		//座標変換
 		static Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 		
+
+		//
+		static Vector3 Cross(const Vector3& v1, const Vector3& v2);
+
 };
 

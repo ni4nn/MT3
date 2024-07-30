@@ -362,6 +362,13 @@ Matrix4x4 MatrixMath::MakeAffineMatrix(const Vector3& scale, const Vector3& rota
     return result;
 }
 
+
+float cot(float other) {
+    return 1 / tan(other);
+}
+
+
+
 Matrix4x4 MatrixMath::MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip)
 {
 
