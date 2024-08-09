@@ -5,7 +5,25 @@
 
 class MyMath
 {
+		
+
+
 	public:
+	
+		struct Line {
+			Vector3 origin;
+			Vector3 diff;
+		};
+
+		struct Ray {
+			Vector3 origin;
+			Vector3 diff;
+		};
+
+		struct Segment {
+			Vector3 origin;
+			Vector3 diff;
+		};
 
 		static const int kColumnWidth = 60;
 
@@ -29,6 +47,11 @@ class MyMath
 
 		//
 		static Vector3 Cross(const Vector3& v1, const Vector3& v2);
+
+		//
+		static Vector3 Project(const Vector3& v1, const Vector3& v2);
+		//
+		static Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
 
 };
 

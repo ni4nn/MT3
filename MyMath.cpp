@@ -106,4 +106,50 @@ Vector3 MyMath::Cross(const Vector3& v1, const Vector3& v2)
 	return result;
 }
 
+Vector3 MyMath::Project(const Vector3& v1, const Vector3& v2)
+{
+	//v1とv2の内積
+	float dotProduct = Dot(v1, v2);
+
+	//v2の長さ
+	float v2Length = Length(v2);
+
+	float scaleFactor = dotProduct / v2Length;
+	Vector3 projection = { v2.x * scaleFactor, v2.y * scaleFactor, v2.z * scaleFactor };
+
+	return projection;
+}
+
+Vector3 MyMath::ClosestPoint(const Vector3& point, const Segment& segment)
+{
+	Vector3 toPoint = Subtract(point, segment.origin);
+
+	// 線分の方向ベクトル
+	Vector3 segmentDir = segment.diff;
+
+	// 線分の方向ベクトルの長さの二乗
+	float segmentDirLengthSquared = segmentDir.x * segmentDir.x + segmentDir.y * segmentDir.y + segmentDir.z * segmentDir.z;
+
+	// 線分の方向ベクトルが0ベクトルである場合、始点が最近接点となる
+	if (segmentDirLengthSquared == 0) {
+		return segment.origin;
+	}
+
+	// 線分の方向ベクトルと点から始点へのベクトルの内積を計算
+	float t = MyMath::Dot(toPoint, segmentDir) / segmentDirLengthSquared;
+
+	// tが0未満の場合、最近接点は始点側の延長上にある
+	if (t < 0) {
+		return segment.origin;
+	}
+
+	// tが1より大きい場合、最近接点は終点側の延長上にある
+	if (t > 1) {
+		return Vector3{ segment.origin.x + segment.diff.x, segment.origin.y + segment.diff.y, segment.origin.z + segment.diff.z };
+	}
+	// 最近接点を計算して返す
+	return { segment.origin.x + segment.diff.x * t, segment.origin.y + segment.diff.y * t, segment.origin.z + segment.diff.z * t };
+}
+
+
 

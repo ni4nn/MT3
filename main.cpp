@@ -172,8 +172,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 Sphere sphere{
-		{0.0f,0.0f,0.0f},
-		1.0f
+		{720.0f,360.0f,0.0f},
+		40.0f
 };
 
 
@@ -187,6 +187,9 @@ Sphere sphere{
 
 	Vector3 cameraTranslate = { 0.0f,1.9f,-6.49f };
 	Vector3 cameraRotate = { 0.26f,0.0f,0.0f };
+
+	MyMath::Segment segment = { {-2.0f,-1.0f,0.0f},{3.0f,2.0f,2.0f} };
+	Vector3 point = { -1.5f,0.6f,0.6f };
 
 
 	//Matrix4x4 m1 = {
@@ -275,6 +278,25 @@ Sphere sphere{
 		/// ↓更新処理ここから
 		///
 
+		//各種行列の計算
+		Matrix4x4 worldMatrix = MatrixMath::MakeAffineMatrix({ 1.0f,1.0f,1.0f }, rotate, translate);
+		Matrix4x4 cameraMatrix = MatrixMath::MakeAffineMatrix({ 1.0f,1.0f,1.0f }, cameraRotate, cameraTranslate);
+		Matrix4x4 viewMatrix = MatrixMath::Inverse(cameraMatrix);
+		Matrix4x4 projectionMatrix = MatrixMath::MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
+		//WVPMatrixを作る
+		Matrix4x4 worldViewProjectionMatrix = MatrixMath::Multiply(worldMatrix, MatrixMath::Multiply(viewMatrix, projectionMatrix));
+		//ViewportMatrixを作る
+		Matrix4x4 viewPortMatrix = MatrixMath::MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
+
+		Vector3 project = MyMath::Project(MyMath::Subtract(point, segment.origin), segment.diff);
+		Vector3 closestPoint = MyMath::ClosestPoint(point, segment);
+
+		//１センチの急を描画
+		Sphere pointSphere{ point,0.01f };
+		Sphere closestPointSphere{ closestPoint,0.01f };
+
+		Vector3 start = MyMath::Transform(MyMath::Transform(segment.origin, worldViewProjectionMatrix), viewPortMatrix);
+		Vector3 end = MyMath:: Transform(MyMath::Transform(MyMath::Add(segment.origin, segment.diff), worldViewProjectionMatrix), viewPortMatrix);
 
 		/*MatrixScreenPrintf(0, 0, resultAdd, "Add");
 		MatrixScreenPrintf(0, kRowHeight * 5, resultSubtract, "Subtract");
@@ -334,11 +356,11 @@ Sphere sphere{
 		//rotate.y += 0.1f;
 
 
-		Matrix4x4 cameraMatrix = MatrixMath::MakeAffineMatrix({ 1.0f,1.0f,1.0f }, cameraRotate, cameraTranslate);
+		/*Matrix4x4 cameraMatrix = MatrixMath::MakeAffineMatrix({ 1.0f,1.0f,1.0f }, cameraRotate, cameraTranslate);
 		Matrix4x4 viewMatrix = MatrixMath::Inverse(cameraMatrix);
 		Matrix4x4 projectionMatrix = MatrixMath::MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
 		Matrix4x4 worldViewProjectionMatrix = MatrixMath::Multiply(viewMatrix, projectionMatrix);
-		Matrix4x4 viewportMatrix = MatrixMath::MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
+		Matrix4x4 viewportMatrix = MatrixMath::MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);*/
 
 
 
@@ -353,9 +375,14 @@ Sphere sphere{
 
 		/*MyMath::VectorScreenPrintf(0, 0, cross, "Cross");
 		Novice::DrawTriangle(int(screenVertices[0].x), int(screenVertices[0].y), int(screenVertices[1].x), int(screenVertices[1].y), int(screenVertices[2].x), int(screenVertices[2].y), RED, kFillModeSolid);*/
-		
-		DrawGrid(worldViewProjectionMatrix, viewportMatrix);
-		DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, BLACK);
+		DrawGrid(worldViewProjectionMatrix, viewPortMatrix);
+		DrawSphere(pointSphere, worldViewProjectionMatrix, viewPortMatrix, RED);
+		DrawSphere(closestPointSphere, worldViewProjectionMatrix, viewPortMatrix, BLACK);
+
+		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
+
+		//DrawGrid(worldViewProjectionMatrix, viewportMatrix);
+		//DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, BLACK);
 
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
