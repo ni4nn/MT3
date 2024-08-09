@@ -143,7 +143,15 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 
 }
 
-
+bool IsCollision(const Sphere& s1, const Sphere& s2) {
+	// 2つの球の中心点間の距離を求める
+	float distance = MyMath::Length(MyMath::Subtract(s2.center, s1.center));
+	// 半径の合計よりも短ければ衝突している
+	if (distance <= s1.radius + s2.radius) {
+		return true;
+	}
+	return false;
+}
 
 //Vector3の表示関数
 static const int kRowHeight = 20;
@@ -171,11 +179,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int kWindowHeight = 720;
 
 
-Sphere sphere{
-		{720.0f,360.0f,0.0f},
-		40.0f
-};
+//Sphere sphere{
+//		{720.0f,360.0f,0.0f},
+//		40.0f
+//};
 
+	Sphere sphere1 = {
+		{0.f,0.f,0.f},
+		1.f
+	};
+	Sphere sphere2 = {
+		{0.4f,0.4f,0.f},
+		0.5f
+	};
+
+	int color;
 
 	// キー入力結果を受け取る箱
 
@@ -189,7 +207,7 @@ Sphere sphere{
 	Vector3 cameraRotate = { 0.26f,0.0f,0.0f };
 
 	MyMath::Segment segment = { {-2.0f,-1.0f,0.0f},{3.0f,2.0f,2.0f} };
-	Vector3 point = { -1.5f,0.6f,0.6f };
+	//Vector3 point = { -1.5f,0.6f,0.6f };
 
 
 	//Matrix4x4 m1 = {
@@ -288,82 +306,14 @@ Sphere sphere{
 		//ViewportMatrixを作る
 		Matrix4x4 viewPortMatrix = MatrixMath::MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
-		Vector3 project = MyMath::Project(MyMath::Subtract(point, segment.origin), segment.diff);
-		Vector3 closestPoint = MyMath::ClosestPoint(point, segment);
+		IsCollision(sphere1, sphere2);
 
-		//１センチの急を描画
-		Sphere pointSphere{ point,0.01f };
-		Sphere closestPointSphere{ closestPoint,0.01f };
-
-		Vector3 start = MyMath::Transform(MyMath::Transform(segment.origin, worldViewProjectionMatrix), viewPortMatrix);
-		Vector3 end = MyMath:: Transform(MyMath::Transform(MyMath::Add(segment.origin, segment.diff), worldViewProjectionMatrix), viewPortMatrix);
-
-		/*MatrixScreenPrintf(0, 0, resultAdd, "Add");
-		MatrixScreenPrintf(0, kRowHeight * 5, resultSubtract, "Subtract");
-		MatrixScreenPrintf(0, kRowHeight * 5 * 2, resultMultiply, "Multiply");
-		MatrixScreenPrintf(0, kRowHeight * 5 * 3, inverseM1, "inverseM1");
-		MatrixScreenPrintf(0, kRowHeight * 5 * 4, inverseM2, "inverseM2");
-		MatrixScreenPrintf(kColumnWidth * 5, 0, transposeM1, "transposeM1");
-		MatrixScreenPrintf(kColumnWidth * 5,kRowHeight*5,transposeM2,"transposeM2");
-		MatrixScreenPrintf(kColumnWidth * 5, kRowHeight * 5 * 2, identity, "identity");*/
-
-	/*	MyMath::VectorScreenPrintf(0, 0, transformed, "transformed");
-		MatrixScreenPrintf(0, 15, translateMatrix, "translateMatrix");
-		MatrixScreenPrintf(0, 15 + kRowHeight * 5, scaleMatrix, "scaleMatrix");*/
-
-
-		/*MatrixScreenPrintf(0, 0, rotateXMatrix, "rotateXMatrix");
-		MatrixScreenPrintf(0, kRowHeight * 5, rotateYMatrix, "rotateYMatrix");
-		MatrixScreenPrintf(0, kRowHeight * 5 * 2, rotateZMatrix, "rotateZMatrix");
-		MatrixScreenPrintf(0, kRowHeight * 5 * 3, rotateXYZMatrix, "rotateXYZMatrix");*/
-
-		//MatrixScreenPrintf(0, 0, worldMatrix, "worldMatrix");
-
-		/*MatrixScreenPrintf(0, 0, orthographicMatrix, "orthographicMatrix");
-		MatrixScreenPrintf(0, kRowHeight * 5, perspectiveFovMatrix, "perspectiveFovMatrix");
-		MatrixScreenPrintf(0, kRowHeight * 10, viewportMatrix, "viewportMatrix") ;*/
-
-		//if (keys[DIK_W] ) {
-		//	translate.z += 0.5f;
-		//}
-
-		//if (keys[DIK_S]) {
-		//	translate.z -= 0.5f;
-		//}
-		//
-		//if (keys[DIK_A]) {
-		//	translate.x -= 0.5f;
-		//}
-
-		//if (keys[DIK_D]) {
-		//	translate.x += 0.5f;
-		//}
-
-		//
-		////計算処理
-		//Matrix4x4 worldMatrix = MatrixMath::MakeAffineMatrix({ 1.0f,1.0f,1.0f, }, rotate, translate);
-		//Matrix4x4 cameraMatrix = MatrixMath::MakeAffineMatrix({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, cameraPosition);
-		//Matrix4x4 viewMatrix = MatrixMath::Inverse(cameraMatrix);
-		//Matrix4x4 projectionMatrix = MatrixMath::MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
-		//Matrix4x4 worldViewProjectionMatrix = MatrixMath::Multiply(worldMatrix, MatrixMath::Multiply(viewMatrix, projectionMatrix));
-		//Matrix4x4 viewportMatrix = MatrixMath::MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
-		//Vector3 screenVertices[3];
-		//for (uint32_t i = 0; i < 3; ++i) {
-		//	Vector3 ndcVertex = Transform(kLocalVertices[i], worldViewProjectionMatrix);
-		//	screenVertices[i] = Transform(ndcVertex, viewportMatrix);
-		//}
-
-		//rotate.y += 0.1f;
-
-
-		/*Matrix4x4 cameraMatrix = MatrixMath::MakeAffineMatrix({ 1.0f,1.0f,1.0f }, cameraRotate, cameraTranslate);
-		Matrix4x4 viewMatrix = MatrixMath::Inverse(cameraMatrix);
-		Matrix4x4 projectionMatrix = MatrixMath::MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
-		Matrix4x4 worldViewProjectionMatrix = MatrixMath::Multiply(viewMatrix, projectionMatrix);
-		Matrix4x4 viewportMatrix = MatrixMath::MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);*/
-
-
-
+		if (IsCollision(sphere1, sphere2)) {
+			color = RED;
+		}
+		else {
+			color = WHITE;
+		}
 
 		///
 		/// ↑更新処理ここまで
@@ -373,22 +323,15 @@ Sphere sphere{
 		/// ↓描画処理ここから
 		///
 
-		/*MyMath::VectorScreenPrintf(0, 0, cross, "Cross");
-		Novice::DrawTriangle(int(screenVertices[0].x), int(screenVertices[0].y), int(screenVertices[1].x), int(screenVertices[1].y), int(screenVertices[2].x), int(screenVertices[2].y), RED, kFillModeSolid);*/
+		DrawSphere(sphere1, worldViewProjectionMatrix, viewPortMatrix, color);
+		DrawSphere(sphere2, worldViewProjectionMatrix, viewPortMatrix, BLACK);
 		DrawGrid(worldViewProjectionMatrix, viewPortMatrix);
-		DrawSphere(pointSphere, worldViewProjectionMatrix, viewPortMatrix, RED);
-		DrawSphere(closestPointSphere, worldViewProjectionMatrix, viewPortMatrix, BLACK);
-
-		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
-
-		//DrawGrid(worldViewProjectionMatrix, viewportMatrix);
-		//DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, BLACK);
 
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-		ImGui::DragFloat3("SphereCenter", &sphere.center.x, 0.01f);
-		ImGui::DragFloat3("CameraTranslate", &sphere.radius, 0.01f);
+		ImGui::DragFloat3("SphereCenter", &sphere1.center.x, 0.01f);
+		ImGui::DragFloat3("CameraTranslate", &sphere1.radius, 0.01f);
 		ImGui::End();
 
 
